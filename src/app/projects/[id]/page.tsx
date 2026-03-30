@@ -440,8 +440,16 @@ export default function ProjectEditPage() {
         </div>
       </div>
 
+      <div className="px-6">
+      <Tabs defaultValue="text" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="text">テキスト</TabsTrigger>
+          <TabsTrigger value="screenshots">スクリーンショット</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="text" className="space-y-6">
       {/* アクションバー (sticky) */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b px-6 py-3">
+      <div className="sticky top-0 z-10 -mx-6 bg-background/95 backdrop-blur border-b px-6 py-3">
         <div className="flex flex-wrap gap-2 items-center">
           <Button variant="outline" size="sm" onClick={handleFetchRemote} disabled={fetchingRemote}>
             {fetchingRemote ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="mr-1.5 h-3.5 w-3.5" />}
@@ -545,15 +553,6 @@ export default function ProjectEditPage() {
           </AlertDialog>
         </div>
       </div>
-
-      <div className="px-6">
-      <Tabs defaultValue="text" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="text">テキスト</TabsTrigger>
-          <TabsTrigger value="screenshots">スクリーンショット</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="text" className="space-y-6">
       {/* 反映結果 */}
       {pushResults && (
         <div ref={resultsRef}>
