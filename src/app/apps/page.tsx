@@ -305,10 +305,10 @@ export default function AppsPage() {
                   setTargetLocales(targetLocales.filter((l) => l !== newVal))
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="min-w-[280px]">
                   {LOCALE_OPTIONS.map((loc) => (
                     <SelectItem key={loc.code} value={loc.code}>
                       {loc.label} ({loc.code})
@@ -342,10 +342,10 @@ export default function AppsPage() {
                   value={addingLocale}
                   onValueChange={(val: string | null) => handleAddLocale(val ?? "")}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="+ 言語を追加" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="min-w-[280px]">
                     {availableLocales.map((loc) => (
                       <SelectItem key={loc.code} value={loc.code}>
                         {loc.label} ({loc.code})

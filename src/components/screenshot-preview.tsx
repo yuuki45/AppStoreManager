@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Loader2, RefreshCw, Trash2, Download } from "lucide-react"
+import { Loader2, RefreshCw, Trash2, Download, Sparkles } from "lucide-react"
 
 interface ScreenshotPreviewProps {
   src: string | null
@@ -15,8 +15,10 @@ interface ScreenshotPreviewProps {
   status?: string
   error?: string
   onRegenerate?: () => void
+  onGenerate?: () => void
   onDelete?: () => void
   regenerating?: boolean
+  generating?: boolean
 }
 
 export function ScreenshotPreview({
@@ -29,8 +31,10 @@ export function ScreenshotPreview({
   status,
   error,
   onRegenerate,
+  onGenerate,
   onDelete,
   regenerating,
+  generating,
 }: ScreenshotPreviewProps) {
   const aspectRatio = height / width
   const [downloading, setDownloading] = useState(false)
@@ -85,6 +89,20 @@ export function ScreenshotPreview({
                 <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
                 <RefreshCw className="h-3 w-3" />
+              )}
+            </Button>
+          )}
+          {onGenerate && !isSource && !onRegenerate && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onGenerate}
+              disabled={generating}
+            >
+              {generating ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <Sparkles className="h-3 w-3" />
               )}
             </Button>
           )}

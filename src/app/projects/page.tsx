@@ -28,6 +28,7 @@ import {
   Trash2,
   BookOpen,
 } from "lucide-react"
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 import { getLocaleLabel } from "@/lib/locales"
 
 interface Project {
@@ -270,34 +271,54 @@ export default function ProjectsPage() {
                     <p className="text-xs text-muted-foreground">{group.bundleId}</p>
                   </div>
                   {group.projects.length > 1 && (
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleBatchGenerate(group)}
-                        disabled={isBatchGenerating}
-                      >
-                        {isBatchGenerating ? (
-                          <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                        )}
-                        一括AI生成
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleBatchPush(group)}
-                        disabled={isBatchPushing}
-                      >
-                        {isBatchPushing ? (
-                          <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <Upload className="mr-1.5 h-3.5 w-3.5" />
-                        )}
-                        一括反映
-                      </Button>
-                    </div>
+                    <TooltipProvider>
+                      <div className="flex gap-2">
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBatchGenerate(group)}
+                                disabled={isBatchGenerating}
+                              >
+                                {isBatchGenerating ? (
+                                  <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                                ) : (
+                                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                                )}
+                                一括AI生成
+                              </Button>
+                            }
+                          />
+                          <TooltipContent>
+                            このアプリの全言語プロジェクトに対して AI 翻訳を一括生成します。元文が入力済みのフィールドが対象です。
+                          </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBatchPush(group)}
+                                disabled={isBatchPushing}
+                              >
+                                {isBatchPushing ? (
+                                  <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                                ) : (
+                                  <Upload className="mr-1.5 h-3.5 w-3.5" />
+                                )}
+                                一括反映
+                              </Button>
+                            }
+                          />
+                          <TooltipContent>
+                            このアプリの全言語プロジェクトの「反映対象」フィールドを App Store Connect に一括反映します。
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    </TooltipProvider>
                   )}
                 </div>
 

@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { Loader2, Upload, Sparkles, ImagePlus, Download } from "lucide-react"
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 import { ScreenshotPreview } from "@/components/screenshot-preview"
 import { getImageDimensions, validateScreenshotDimensions } from "@/lib/image-utils"
 import { getDeviceTypeByCode } from "@/types/screenshot-types"
@@ -42,6 +43,7 @@ export function ScreenshotTab({ projectId, sourceLocale, targetLocale }: Screens
   const [uploading, setUploading] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [regeneratingId, setRegeneratingId] = useState<string | null>(null)
+  const [generatingSourceId, setGeneratingSourceId] = useState<string | null>(null)
   const [downloading, setDownloading] = useState(false)
   const [customInstructions, setCustomInstructions] = useState("")
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -166,6 +168,31 @@ export function ScreenshotTab({ projectId, sourceLocale, targetLocale }: Screens
     }
   }
 
+  async function handleGenerateSingle(sourceScreenshotId: string) {
+    setGeneratingSourceId(sourceScreenshotId)
+    try {
+      const res = await fetch(`/api/projects/${projectId}/screenshots/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sourceScreenshotId,
+          customInstructions: customInstructions.trim() || undefined,
+        }),
+      })
+      if (!res.ok) {
+        const { error } = await res.json()
+        toast.error(error || "生成に失敗しました")
+        return
+      }
+      toast.success("生成が完了しました")
+      fetchScreenshots()
+    } catch {
+      toast.error("通信エラーが発生しました")
+    } finally {
+      setGeneratingSourceId(null)
+    }
+  }
+
   async function handleDelete(screenshotId: string) {
     try {
       const res = await fetch(
@@ -260,60 +287,98 @@ export function ScreenshotTab({ projectId, sourceLocale, targetLocale }: Screens
   return (
     <div className="space-y-6">
       {/* アクションバー */}
-      <div className="flex flex-wrap items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploading}
-        >
-          {uploading ? (
-            <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <ImagePlus className="mr-1.5 h-3.5 w-3.5" />
+      <TooltipProvider>
+        <div className="flex flex-wrap items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <ImagePlus className="mr-1.5 h-3.5 w-3.5" />
+                  )}
+                  スクショをアップロード
+                </Button>
+              }
+            />
+            <TooltipContent>
+              ソース言語のスクリーンショット（PNG / JPEG）を選択してアップロードします。デバイスタイプは画像サイズから自動判定されます。
+            </TooltipContent>
+          </Tooltip>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/png,image/jpeg"
+            multiple
+            className="hidden"
+            onChange={handleUpload}
+          />
+
+          {sourceCount > 0 && (
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleGenerate}
+                    disabled={generating}
+                  >
+                    {generating ? (
+                      <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                    )}
+                    スクショを一括生成
+                  </Button>
+                }
+              />
+              <TooltipContent>
+                アップロード済みの全スクリーンショットを AI でターゲット言語に一括翻訳・生成します。枚数が多いと数分かかる場合があります。
+              </TooltipContent>
+            </Tooltip>
           )}
-          スクショをアップロード
-        </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/png,image/jpeg"
-          multiple
-          className="hidden"
-          onChange={handleUpload}
-        />
 
-        {sourceCount > 0 && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleGenerate}
-            disabled={generating}
-          >
-            {generating ? (
-              <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-            )}
-            スクショを一括生成
-          </Button>
-        )}
+          {generatedCount > 0 && (
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownloadAll}
+                    disabled={downloading}
+                  >
+                    {downloading ? (
+                      <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Download className="mr-1.5 h-3.5 w-3.5" />
+                    )}
+                    一括ダウンロード ({generatedCount})
+                  </Button>
+                }
+              />
+              <TooltipContent>
+                生成済みのスクリーンショットをすべてダウンロードします。App Store Connect へは手動でアップロードしてください。
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+      </TooltipProvider>
 
-        {generatedCount > 0 && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleDownloadAll}
-            disabled={downloading}
-          >
-            {downloading ? (
-              <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Download className="mr-1.5 h-3.5 w-3.5" />
-            )}
-            一括ダウンロード ({generatedCount})
-          </Button>
-        )}
+      {/* 注意書き */}
+      <div className="rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-3 text-xs text-blue-700 dark:text-blue-400">
+        スクリーンショットの App Store Connect への直接反映は現在未対応です。生成した画像をダウンロードし、App Store Connect から手動でアップロードしてください。
+      </div>
+
+      <div className="rounded-md bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-3 text-xs text-amber-700 dark:text-amber-400">
+        スクリーンショットの生成には 1 枚あたり数十秒かかります。枚数が多い場合は数分かかることがありますので、生成中はページを閉じずにお待ちください。
       </div>
 
       {/* カスタム翻訳指示 */}
@@ -379,13 +444,12 @@ export function ScreenshotTab({ projectId, sourceLocale, targetLocale }: Screens
               </Badge>
             </div>
 
-            {/* 2カラム比較: ソース | 生成 */}
-            <div className="space-y-4">
+            {/* ソース→生成 ペアを2組ずつ横並び (4枚/行) */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-6">
               {sources.map((source) => {
                 const target = generated.find((g) => g.position === source.position)
-
                 return (
-                  <div key={source.id} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div key={source.id} className="contents">
                     <ScreenshotPreview
                       src={source.url}
                       alt={`${sourceLocale}_${source.position}`}
@@ -405,7 +469,9 @@ export function ScreenshotTab({ projectId, sourceLocale, targetLocale }: Screens
                       status={target?.generation_status ?? "pending"}
                       error={target?.generation_error ?? undefined}
                       onRegenerate={target ? () => handleRegenerate(target.id) : undefined}
+                      onGenerate={!target ? () => handleGenerateSingle(source.id) : undefined}
                       regenerating={regeneratingId === target?.id}
+                      generating={generatingSourceId === source.id}
                     />
                   </div>
                 )

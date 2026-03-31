@@ -30,6 +30,7 @@ import {
   XCircle,
   ChevronRight,
 } from "lucide-react"
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 import {
   FIELD_KEYS,
   FIELD_LABELS,
@@ -450,45 +451,100 @@ export default function ProjectEditPage() {
         <TabsContent value="text" className="space-y-6">
       {/* アクションバー (sticky) */}
       <div className="sticky top-0 z-10 -mx-6 bg-background/95 backdrop-blur border-b px-6 py-3">
+        <TooltipProvider>
         <div className="flex flex-wrap gap-2 items-center">
-          <Button variant="outline" size="sm" onClick={handleFetchRemote} disabled={fetchingRemote}>
-            {fetchingRemote ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="mr-1.5 h-3.5 w-3.5" />}
-            ストアから取得
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleGenerateAll} disabled={generating}>
-            {generating ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Sparkles className="mr-1.5 h-3.5 w-3.5" />}
-            翻訳を一括生成
-          </Button>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button variant="outline" size="sm" onClick={handleFetchRemote} disabled={fetchingRemote}>
+                  {fetchingRemote ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="mr-1.5 h-3.5 w-3.5" />}
+                  ストアから取得
+                </Button>
+              }
+            />
+            <TooltipContent>
+              App Store Connect から現在の登録値とソース言語の元文を取得します。元文が未入力のフィールドのみ上書きされます。
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button variant="outline" size="sm" onClick={handleGenerateAll} disabled={generating}>
+                  {generating ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Sparkles className="mr-1.5 h-3.5 w-3.5" />}
+                  翻訳を一括生成
+                </Button>
+              }
+            />
+            <TooltipContent>
+              全フィールドの元文を AI でターゲット言語に一括翻訳します。生成前に自動保存されます。URL フィールドはスキップされます。
+            </TooltipContent>
+          </Tooltip>
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={handleSave} disabled={saving}>
-              {saving ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Save className="mr-1.5 h-3.5 w-3.5" />}
-              下書き保存
-            </Button>
-            <label className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer whitespace-nowrap">
-              <input
-                type="checkbox"
-                checked={syncSourceToOthers}
-                onChange={(e) => setSyncSourceToOthers(e.target.checked)}
-                className="rounded border-input"
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button size="sm" onClick={handleSave} disabled={saving}>
+                    {saving ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Save className="mr-1.5 h-3.5 w-3.5" />}
+                    下書き保存
+                  </Button>
+                }
               />
-              他言語にも元文を共有
-            </label>
+              <TooltipContent>
+                現在の編集内容を下書きとして保存します。App Store には反映されません。
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <label className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer whitespace-nowrap">
+                    <input
+                      type="checkbox"
+                      checked={syncSourceToOthers}
+                      onChange={(e) => setSyncSourceToOthers(e.target.checked)}
+                      className="rounded border-input"
+                    />
+                    他言語にも元文を共有
+                  </label>
+                }
+              />
+              <TooltipContent>
+                保存時に、同じアプリの他言語プロジェクトにも元文を自動で共有します。各言語で元文を個別入力する手間を省けます。
+              </TooltipContent>
+            </Tooltip>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleToggleAll}
-          >
-            {allSelected ? "反映対象を全解除" : "反映対象を全選択"}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleToggleAll}
+                >
+                  {allSelected ? "反映対象を全解除" : "反映対象を全選択"}
+                </Button>
+              }
+            />
+            <TooltipContent>
+              ストアに反映する対象フィールドを一括で選択・解除します。
+            </TooltipContent>
+          </Tooltip>
           <AlertDialog open={pushDialogOpen} onOpenChange={setPushDialogOpen}>
-            <AlertDialogTrigger
-              disabled={selectedCount === 0 || pushing}
-              className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-destructive/10 text-destructive hover:bg-destructive/20 px-2.5 h-7 text-sm font-medium disabled:pointer-events-none disabled:opacity-50"
-            >
-              {pushing ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Upload className="mr-1.5 h-3.5 w-3.5" />}
-              ストアに反映 ({selectedCount})
-            </AlertDialogTrigger>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <AlertDialogTrigger
+                    disabled={selectedCount === 0 || pushing}
+                    className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-destructive/10 text-destructive hover:bg-destructive/20 px-2.5 h-7 text-sm font-medium disabled:pointer-events-none disabled:opacity-50"
+                  >
+                    {pushing ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Upload className="mr-1.5 h-3.5 w-3.5" />}
+                    ストアに反映 ({selectedCount})
+                  </AlertDialogTrigger>
+                }
+              />
+              <TooltipContent>
+                選択中のフィールドを App Store Connect に直接反映します。反映前に確認ダイアログが表示されます。
+              </TooltipContent>
+            </Tooltip>
             <AlertDialogContent>
               {pushing ? (
                 <div className="flex flex-col items-center gap-4 py-8">
@@ -552,6 +608,7 @@ export default function ProjectEditPage() {
             </AlertDialogContent>
           </AlertDialog>
         </div>
+        </TooltipProvider>
       </div>
       {/* 反映結果 */}
       {pushResults && (

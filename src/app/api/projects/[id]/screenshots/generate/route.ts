@@ -37,7 +37,10 @@ export async function POST(
     }
 
     const body = await request.json().catch(() => ({}))
-    const customInstructions = (body as { customInstructions?: string }).customInstructions
+    const { customInstructions, sourceScreenshotId } = body as {
+      customInstructions?: string
+      sourceScreenshotId?: string
+    }
 
     // ソース画像を取得
     const { data: sets } = await supabase
@@ -57,9 +60,16 @@ export async function POST(
     }> = []
 
     for (const set of sets) {
-      const sourceScreenshots = set.screenshots.filter(
+      let sourceScreenshots = set.screenshots.filter(
         (s: { is_source: boolean }) => s.is_source
       )
+
+      // 個別生成: 指定されたソースのみに絞る
+      if (sourceScreenshotId) {
+        sourceScreenshots = sourceScreenshots.filter(
+          (s: { id: string }) => s.id === sourceScreenshotId
+        )
+      }
 
       for (const source of sourceScreenshots) {
         // ステータスを generating に更新
