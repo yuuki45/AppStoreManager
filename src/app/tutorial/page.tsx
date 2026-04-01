@@ -108,7 +108,7 @@ export default function TutorialPage() {
               <li>「Create API key」をクリック</li>
               <li>生成されたキーをコピー</li>
             </ol>
-            <p className="text-xs mt-1">スクリーンショット翻訳1枚あたり約 $0.02〜0.10</p>
+            <p className="text-xs mt-1">スクリーンショット翻訳1枚あたり約 $0.10〜0.15</p>
           </div>
           <p>
             サイドバーの「<strong>設定</strong>」を開き、それぞれのキーを貼り付けて保存します。
@@ -383,7 +383,7 @@ export default function TutorialPage() {
             <p className="mt-1 text-muted-foreground">
               はい、完全無料です。AI の利用料のみ各プロバイダーに直接課金されます。
               テキスト翻訳は OpenAI（1回あたり約 $0.01〜0.05）、
-              スクリーンショット翻訳は Gemini（1枚あたり約 $0.02〜0.10）です。
+              スクリーンショット翻訳は Gemini（1枚あたり約 $0.10〜0.15）です。
             </p>
           </div>
           <div>

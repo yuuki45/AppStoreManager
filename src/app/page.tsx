@@ -172,16 +172,16 @@ export default async function LandingPage() {
             Pricing
           </p>
           <h2 className="text-3xl font-bold">Free</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            サービス利用は無料。AI の利用料金のみ各プロバイダに直接お支払い。
+          <p className="text-sm text-muted-foreground leading-relaxed text-balance">
+            サービス利用は無料。AI の利用料金のみ各プロバイダに直接お支払いいただきます。
           </p>
           <div className="flex justify-center gap-8 pt-2 text-xs text-muted-foreground">
             <div>
-              <span className="block text-foreground font-medium">~$0.03</span>
+              <span className="block text-foreground font-medium">~$0.01–0.05</span>
               テキスト翻訳 / 回
             </div>
             <div>
-              <span className="block text-foreground font-medium">~$0.05</span>
+              <span className="block text-foreground font-medium">~$0.10–0.15</span>
               スクショ生成 / 枚
             </div>
           </div>

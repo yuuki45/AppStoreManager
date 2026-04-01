@@ -333,7 +333,7 @@ export default function SettingsPage() {
                   <li>生成されたキーをコピー</li>
                 </ol>
                 <p className="text-xs text-muted-foreground mt-2">
-                  スクリーンショット翻訳1枚あたり約 $0.02〜0.10 程度です。
+                  スクリーンショット翻訳1枚あたり約 $0.10〜0.15 程度です。
                 </p>
               </div>
               <div className="flex gap-2">
