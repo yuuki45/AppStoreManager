@@ -34,21 +34,26 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   // 未認証ユーザーを /login にリダイレクト
-  const isAuthPage =
+  const isPublicPage =
+    request.nextUrl.pathname === "/" ||
     request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/signup") ||
     request.nextUrl.pathname.startsWith("/api/auth")
 
-  if (!user && !isAuthPage) {
+  if (!user && !isPublicPage) {
     const url = request.nextUrl.clone()
     url.pathname = "/login"
     return NextResponse.redirect(url)
   }
 
-  // 認証済みユーザーがログインページにアクセスした場合
-  if (user && isAuthPage && !request.nextUrl.pathname.startsWith("/api")) {
+  // 認証済みユーザーがログイン/サインアップページにアクセスした場合
+  const isAuthPage =
+    request.nextUrl.pathname.startsWith("/login") ||
+    request.nextUrl.pathname.startsWith("/signup")
+
+  if (user && isAuthPage) {
     const url = request.nextUrl.clone()
-    url.pathname = "/"
+    url.pathname = "/projects"
     return NextResponse.redirect(url)
   }
 
