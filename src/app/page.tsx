@@ -210,7 +210,17 @@ export default async function LandingPage() {
       <footer className="border-t px-6 py-6">
         <div className="mx-auto max-w-4xl flex items-center justify-between text-xs text-muted-foreground">
           <span>App Store Manager</span>
-          <span>&copy; {new Date().getFullYear()}</span>
+          <div className="flex items-center gap-4">
+            <a
+              href="https://buymeacoffee.com/yuuki.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              Buy me a coffee
+            </a>
+            <span>&copy; {new Date().getFullYear()}</span>
+          </div>
         </div>
       </footer>
     </div>

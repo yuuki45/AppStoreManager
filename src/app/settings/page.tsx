@@ -362,6 +362,26 @@ export default function SettingsPage() {
           すべての機能を無料で利用できます。AI の利用料は各プロバイダーに直接課金されます。
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>開発を応援する</CardTitle>
+          <CardDescription>このツールが役に立ったら、コーヒー1杯分の応援をいただけると励みになります</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <a
+            href="https://buymeacoffee.com/yuuki.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+              alt="Buy Me A Coffee"
+              className="h-10"
+            />
+          </a>
+        </CardContent>
+      </Card>
     </div>
   )
 }
