@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/projects/", "/apps/", "/connections/", "/settings/", "/tutorial/"],
       },
     ],
-    sitemap: "https://app-store-manager.vercel.app/sitemap.xml",
+    sitemap: "https://app-store-manager-dun.vercel.app/sitemap.xml",
   }
 }

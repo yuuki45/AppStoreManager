@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
-export const metadataBase = new URL("https://app-store-manager.vercel.app")
+export const metadataBase = new URL("https://app-store-manager-dun.vercel.app")
 
 export const metadata: Metadata = {
   title: "App Store Manager - App Store ローカライズを AI で一括完了",
