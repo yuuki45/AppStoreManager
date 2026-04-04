@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   title: "App Store Manager - App Store ローカライズを AI で一括完了",
   description:
     "App Store Connect のメタデータとスクリーンショットを AI で一括翻訳。比較・編集して、そのまま App Store Connect に反映できるツール。",
+  verification: {
+    google: "LxEwWkTBF_dRmuRAnj8ostArpTH8OceQjfA-RSnnN1g",
+  },
   openGraph: {
     title: "App Store Manager",
     description:
