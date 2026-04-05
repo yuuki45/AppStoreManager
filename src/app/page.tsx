@@ -24,7 +24,7 @@ export default async function LandingPage() {
   return (
     <div className="flex min-h-full flex-col bg-background">
       {/* ── Header ── */}
-      <header className="fixed inset-x-0 top-0 z-50 bg-background/80 backdrop-blur-md">
+      <header className="fixed inset-x-0 top-0 z-50 bg-background/80 backdrop-blur-md animate-fade-in">
         <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-6">
           <span className="text-sm font-semibold tracking-tight">
             App Store Manager
@@ -51,25 +51,25 @@ export default async function LandingPage() {
       {/* ── Hero ── */}
       <section className="flex flex-1 flex-col items-center justify-center px-6 pt-32 pb-24">
         <div className="mx-auto max-w-xl text-center space-y-8">
-          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          <p className="animate-fade-up text-xs font-medium uppercase tracking-widest text-muted-foreground">
             App Store Localization Tool
           </p>
 
-          <h1 className="text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl">
+          <h1 className="animate-fade-up delay-100 text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl">
             ローカライズを、
             <br />
             もっとシンプルに。
           </h1>
 
-          <p className="mx-auto max-w-md text-base text-muted-foreground leading-relaxed">
+          <p className="animate-fade-up delay-200 mx-auto max-w-md text-base text-muted-foreground leading-relaxed">
             AI がメタデータとスクリーンショットを翻訳。
             <br className="hidden sm:block" />
             比較・編集して、そのまま App Store Connect へ。
           </p>
 
-          <div className="flex items-center justify-center gap-3">
+          <div className="animate-fade-up delay-300 flex items-center justify-center gap-3">
             <Link href={cta.href}>
-              <Button size="lg" className="rounded-full px-6">
+              <Button size="lg" className="rounded-full px-6 transition-transform hover:scale-105">
                 {cta.label}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -81,7 +81,7 @@ export default async function LandingPage() {
       {/* ── How it works ── */}
       <section className="border-t px-6 py-24">
         <div className="mx-auto max-w-3xl">
-          <p className="text-center text-xs font-medium uppercase tracking-widest text-muted-foreground mb-12">
+          <p className="animate-fade-up text-center text-xs font-medium uppercase tracking-widest text-muted-foreground mb-12">
             How it works
           </p>
 
@@ -95,9 +95,12 @@ export default async function LandingPage() {
                 { num: "02", title: "AI が翻訳", desc: "GPT-4o が App Store に最適化された自然な翻訳を一括生成。スクリーンショットも Gemini で多言語化。" },
                 { num: "03", title: "比較して編集", desc: "元文・現在の登録値・AI 提案の 3 カラムで比較。納得いくまで手動で微調整できます。" },
                 { num: "04", title: "ストアに反映", desc: "反映したい項目を選んでワンクリック。App Store Connect に直接書き込みます。" },
-              ].map((step) => (
-                <div key={step.num} className="flex gap-6 items-start">
-                  <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border bg-background text-xs font-bold tabular-nums">
+              ].map((step, i) => (
+                <div
+                  key={step.num}
+                  className={`animate-fade-up delay-${(i + 1) * 100} flex gap-6 items-start`}
+                >
+                  <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border bg-background text-xs font-bold tabular-nums transition-colors hover:bg-primary hover:text-primary-foreground">
                     {step.num}
                   </div>
                   <div className="pt-1.5 space-y-1">
@@ -116,7 +119,7 @@ export default async function LandingPage() {
       {/* ── Features ── */}
       <section className="border-t px-6 py-24">
         <div className="mx-auto max-w-4xl">
-          <p className="text-center text-xs font-medium uppercase tracking-widest text-muted-foreground mb-12">
+          <p className="animate-fade-up text-center text-xs font-medium uppercase tracking-widest text-muted-foreground mb-12">
             Features
           </p>
 
@@ -152,8 +155,11 @@ export default async function LandingPage() {
                 title: "マルチプロジェクト",
                 desc: "アプリ x 言語ペアでプロジェクト管理。一括操作で全言語まとめて処理。",
               },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="space-y-2">
+            ].map(({ icon: Icon, title, desc }, i) => (
+              <div
+                key={title}
+                className={`animate-fade-up delay-${(i + 1) * 100} space-y-2 rounded-lg p-4 transition-colors hover:bg-muted/50`}
+              >
                 <Icon className="h-4 w-4 text-muted-foreground" />
                 <h3 className="text-sm font-semibold">{title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
@@ -167,7 +173,7 @@ export default async function LandingPage() {
 
       {/* ── Pricing ── */}
       <section className="border-t px-6 py-24">
-        <div className="mx-auto max-w-md text-center space-y-4">
+        <div className="animate-fade-up mx-auto max-w-md text-center space-y-4">
           <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
             Pricing
           </p>
@@ -190,7 +196,7 @@ export default async function LandingPage() {
 
       {/* ── CTA ── */}
       <section className="border-t px-6 py-24">
-        <div className="mx-auto max-w-md text-center space-y-6">
+        <div className="animate-fade-up mx-auto max-w-md text-center space-y-6">
           <h2 className="text-2xl font-bold tracking-tight">
             今すぐ始めましょう
           </h2>
@@ -198,7 +204,7 @@ export default async function LandingPage() {
             個人開発者・小規模チームのためのローカライズツール
           </p>
           <Link href={cta.href}>
-            <Button size="lg" className="rounded-full px-6">
+            <Button size="lg" className="rounded-full px-6 transition-transform hover:scale-105">
               {cta.label}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -215,7 +221,7 @@ export default async function LandingPage() {
               href="https://buymeacoffee.com/yuuki.dev"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors cursor-pointer"
             >
               Buy me a coffee
             </a>
