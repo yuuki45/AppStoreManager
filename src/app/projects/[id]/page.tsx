@@ -29,6 +29,7 @@ import {
   CheckCircle2,
   XCircle,
   ChevronRight,
+  Info,
 } from "lucide-react"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 import {
@@ -38,6 +39,7 @@ import {
   FIELD_AVAILABILITY,
   AVAILABILITY_LABELS,
   isUrlField,
+  isUnpushableField,
 } from "@/types/field-keys"
 import type { FieldKey } from "@/types/field-keys"
 import { ScreenshotTab } from "@/components/screenshot-tab"
@@ -352,15 +354,17 @@ export default function ProjectEditPage() {
     }
   }
 
-  const selectedCount = Array.from(fields.values()).filter((f) => f.is_selected).length
-  const totalFieldCount = fields.size
-  const allSelected = selectedCount === totalFieldCount && totalFieldCount > 0
+  const pushableFields = Array.from(fields.entries()).filter(([key]) => !isUnpushableField(key as FieldKey))
+  const selectedCount = pushableFields.filter(([, f]) => f.is_selected).length
+  const totalPushableCount = pushableFields.length
+  const allSelected = selectedCount === totalPushableCount && totalPushableCount > 0
 
   function handleToggleAll() {
     const newValue = !allSelected
     setFields((prev) => {
       const next = new Map(prev)
       for (const [key, field] of next) {
+        if (isUnpushableField(key as FieldKey)) continue
         next.set(key, { ...field, is_selected: newValue })
       }
       return next
@@ -560,7 +564,7 @@ export default function ProjectEditPage() {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   {(() => {
-                    const selectedFields = Array.from(fields.values()).filter((f) => f.is_selected)
+                    const selectedFields = Array.from(fields.values()).filter((f) => f.is_selected && !isUnpushableField(f.field_key))
                     const hasReviewRequired = selectedFields.some(
                       (f) => FIELD_AVAILABILITY[f.field_key] === "review_required"
                     )
@@ -571,7 +575,7 @@ export default function ProjectEditPage() {
                       <>
                         {hasReviewRequired && (
                           <div className="rounded-md bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 p-2.5 text-xs text-orange-700 dark:text-orange-400">
-                            審査対象の項目（名前、サブタイトル等）が含まれています。App Store Connect で新しいバージョンを作成し、ビルドを追加した状態（提出準備中）にしてから反映してください。
+                            審査対象の項目（プライバシーポリシーURL 等）が含まれています。App Store Connect で新しいバージョンを作成し、ビルドを追加した状態（提出準備中）にしてから反映してください。
                           </div>
                         )}
                         {hasVersionReady && !hasReviewRequired && (
@@ -584,7 +588,7 @@ export default function ProjectEditPage() {
                   })()}
                   <ul className="text-sm space-y-1.5 px-1">
                     {Array.from(fields.values())
-                      .filter((f) => f.is_selected)
+                      .filter((f) => f.is_selected && !isUnpushableField(f.field_key))
                       .map((f) => (
                         <li key={f.field_key} className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-1.5">
@@ -641,6 +645,16 @@ export default function ProjectEditPage() {
         </div>
       )}
 
+      {/* API反映不可フィールドの注意書き */}
+      <div className="flex items-start gap-2.5 rounded-md border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-3 text-xs text-amber-700 dark:text-amber-400">
+        <Info className="h-4 w-4 shrink-0 mt-0.5" />
+        <div>
+          <span className="font-medium">名前・サブタイトル</span>は App Store Connect API の制限により、API 経由での反映ができません。翻訳結果をコピーして、
+          <a href="https://appstoreconnect.apple.com" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-amber-900 dark:hover:text-amber-300">App Store Connect</a>
+          {" "}から直接設定してください。
+        </div>
+      </div>
+
       {/* 3カラムヘッダー */}
       <div className="hidden lg:grid lg:grid-cols-3 gap-4 text-sm font-medium text-muted-foreground">
         <div>元文 ({project.source_locale})</div>
@@ -667,15 +681,17 @@ export default function ProjectEditPage() {
                   <DiffDot current={field.current_remote_value} proposed={field.proposed_value} />
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={field.is_selected}
-                      onChange={(e) => updateField(key, { is_selected: e.target.checked })}
-                      className="rounded border-input"
-                    />
-                    反映対象
-                  </label>
+                  {!isUnpushableField(key) && (
+                    <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={field.is_selected}
+                        onChange={(e) => updateField(key, { is_selected: e.target.checked })}
+                        className="rounded border-input"
+                      />
+                      反映対象
+                    </label>
+                  )}
                   {!isUrlField(key) && (
                     <Button variant="ghost" size="sm" onClick={() => handleGenerateField(key)} disabled={generatingField === key}>
                       {generatingField === key ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}

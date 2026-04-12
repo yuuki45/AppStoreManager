@@ -194,8 +194,8 @@ export default function TutorialPage() {
           <div className="rounded-md bg-muted p-3 space-y-1">
             <p className="font-medium text-foreground">主な項目:</p>
             <ul className="list-disc list-inside space-y-0.5">
-              <li><strong>名前</strong> — アプリ名（30文字以内）<span className="text-orange-600 text-xs ml-1">審査対象</span></li>
-              <li><strong>サブタイトル</strong> — サブタイトル（30文字以内）<span className="text-orange-600 text-xs ml-1">審査対象</span></li>
+              <li><strong>名前</strong> — アプリ名（30文字以内）<span className="text-gray-500 text-xs ml-1">API反映不可</span></li>
+              <li><strong>サブタイトル</strong> — サブタイトル（30文字以内）<span className="text-gray-500 text-xs ml-1">API反映不可</span></li>
               <li><strong>このバージョンの最新情報</strong> — アップデート内容（毎バージョン更新）</li>
               <li><strong>説明</strong> — 説明文（4000文字以内）</li>
               <li><strong>キーワード</strong> — 検索キーワード（100文字以内、カンマ区切り）</li>
@@ -213,6 +213,7 @@ export default function TutorialPage() {
             <span className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-medium bg-green-100 text-green-700">いつでも変更可</span>
             <span className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-700">バージョン準備中のみ</span>
             <span className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-medium bg-orange-100 text-orange-700">審査対象</span>
+            <span className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-medium bg-gray-100 text-gray-500">API反映不可</span>
           </div>
           <div className="rounded-md bg-muted p-3 space-y-1">
             <p className="font-medium text-foreground">元文の自動共有:</p>
@@ -296,6 +297,13 @@ export default function TutorialPage() {
             テキストタブで反映したい項目の「<strong>反映対象</strong>」チェックボックスをオンにします。
             「<strong>反映対象を全選択</strong>」ボタンで全項目をまとめて選択・解除できます。
           </p>
+          <div className="rounded-md bg-amber-50 border border-amber-200 p-3 space-y-1">
+            <p className="font-medium text-amber-700">名前・サブタイトルについて</p>
+            <p className="text-amber-700">
+              アプリ名とサブタイトルは App Store Connect API の制限により、API 経由での反映ができません。
+              AI で翻訳した結果をコピーして、App Store Connect から直接設定してください。
+            </p>
+          </div>
           <p>
             現在値と提案値が異なる項目には
             <span className="inline-block mx-1 h-2 w-2 rounded-full bg-amber-500" />
@@ -319,7 +327,8 @@ export default function TutorialPage() {
             <ul className="list-disc list-inside space-y-0.5">
               <li><strong>いつでも</strong> — プロモーション用テキスト</li>
               <li><strong>バージョン準備中</strong> — 説明、キーワード、最新情報、URL 系</li>
-              <li><strong>審査対象</strong> — 名前、サブタイトル（バージョン提出準備中かつ審査通過が必要）</li>
+              <li><strong>審査対象</strong> — プライバシーポリシーURL（バージョン提出準備中かつ審査通過が必要）</li>
+              <li><strong>API反映不可</strong> — 名前、サブタイトル（App Store Connect から直接変更してください）</li>
             </ul>
             <p className="text-xs mt-1">
               「バージョン準備中」とは、App Store Connect で新しいバージョンを作成しビルドを追加した状態（提出準備中）のことです。
@@ -407,8 +416,9 @@ export default function TutorialPage() {
             <p className="font-medium text-foreground">Q. 反映できる項目とタイミングは？</p>
             <p className="mt-1 text-muted-foreground">
               <strong>プロモーション用テキスト</strong>はいつでも変更可能です（審査不要）。
-              その他の項目は App Store Connect で新バージョンを作成し、ビルドを追加した状態（提出準備中）が必要です。
-              名前とサブタイトルの変更は審査対象になります。
+              説明、キーワード、URL 系などは App Store Connect で新バージョンを作成し、ビルドを追加した状態（提出準備中）が必要です。
+              <strong>名前とサブタイトル</strong>は API の制限により本ツールからの直接反映はできません。
+              翻訳結果をコピーして App Store Connect から手動で設定してください。
             </p>
           </div>
           <div>

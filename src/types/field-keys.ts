@@ -55,11 +55,11 @@ export const FIELD_MAX_LENGTH: Record<FieldKey, number | null> = {
 }
 
 // フィールドの変更可能タイミング
-export type FieldAvailability = "anytime" | "version_ready" | "review_required"
+export type FieldAvailability = "anytime" | "version_ready" | "review_required" | "api_unavailable"
 
 export const FIELD_AVAILABILITY: Record<FieldKey, FieldAvailability> = {
-  app_name: "review_required",
-  subtitle: "review_required",
+  app_name: "api_unavailable",
+  subtitle: "api_unavailable",
   privacy_policy_url: "review_required",
   description: "version_ready",
   keywords: "version_ready",
@@ -82,6 +82,17 @@ export const AVAILABILITY_LABELS: Record<FieldAvailability, { label: string; cla
     label: "審査対象",
     className: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
   },
+  api_unavailable: {
+    label: "API反映不可",
+    className: "bg-gray-100 text-gray-500 dark:bg-gray-800/30 dark:text-gray-400",
+  },
+}
+
+// API 経由で反映不可のフィールド（App Store Connect API の制限）
+export const UNPUSHABLE_FIELDS: FieldKey[] = ["app_name", "subtitle"]
+
+export function isUnpushableField(key: FieldKey): boolean {
+  return UNPUSHABLE_FIELDS.includes(key)
 }
 
 // URL フィールド（AI生成しない）

@@ -3,7 +3,7 @@ import { createServerClient } from "@/lib/supabase/server"
 import { decrypt } from "@/lib/encryption"
 import { generateAppleJwt } from "@/lib/apple/jwt"
 import { appleApi } from "@/lib/apple/client"
-import { FIELD_TO_APPLE_INFO, FIELD_TO_APPLE_VERSION } from "@/types/field-keys"
+import { FIELD_TO_APPLE_INFO, FIELD_TO_APPLE_VERSION, isUnpushableField } from "@/types/field-keys"
 import type { FieldKey } from "@/types/field-keys"
 import type {
   AppInfosResponse,
@@ -155,6 +155,18 @@ export async function POST(
 
     for (const field of selectedFields) {
       const key = field.field_key as FieldKey
+
+      // app_name / subtitle は API 経由で更新不可
+      if (isUnpushableField(key)) {
+        results.push({
+          field_key: key,
+          locale: targetLocale,
+          success: false,
+          error: "このフィールドは API 経由では反映できません。App Store Connect で直接変更してください。",
+        })
+        continue
+      }
+
       const targetValue = field.proposed_value ?? field.final_value
       const sourceValue = field.source_value
 

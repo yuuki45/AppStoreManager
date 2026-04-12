@@ -4,7 +4,7 @@ import { batchProjectIdsSchema } from "@/lib/validations"
 import { decrypt } from "@/lib/encryption"
 import { generateAppleJwt } from "@/lib/apple/jwt"
 import { appleApi } from "@/lib/apple/client"
-import { FIELD_TO_APPLE_INFO, FIELD_TO_APPLE_VERSION } from "@/types/field-keys"
+import { FIELD_TO_APPLE_INFO, FIELD_TO_APPLE_VERSION, isUnpushableField } from "@/types/field-keys"
 import type { FieldKey } from "@/types/field-keys"
 import type {
   AppInfosResponse,
@@ -119,6 +119,10 @@ export async function POST(request: Request) {
 
         for (const field of selectedFields) {
           const key = field.field_key as FieldKey
+
+          // app_name / subtitle は API 経由で更新不可 → スキップ
+          if (isUnpushableField(key)) continue
+
           const targetValue = field.proposed_value ?? field.final_value
           const sourceValue = field.source_value
 

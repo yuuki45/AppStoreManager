@@ -50,9 +50,19 @@ export function ScreenshotTab({ projectId, sourceLocale, targetLocale }: Screens
 
   const fetchScreenshots = useCallback(async () => {
     try {
-      const res = await fetch(`/api/projects/${projectId}/screenshots`)
+      const res = await fetch(`/api/projects/${projectId}/screenshots`, { cache: "no-store" })
       if (!res.ok) return
       const { data } = await res.json()
+      // 画像URLにキャッシュバスターを付加して、ブラウザキャッシュを回避
+      const ts = Date.now()
+      for (const set of data ?? []) {
+        for (const ss of set.screenshots) {
+          if (ss.url) {
+            const sep = ss.url.includes("?") ? "&" : "?"
+            ss.url = `${ss.url}${sep}t=${ts}`
+          }
+        }
+      }
       setSets(data ?? [])
     } catch {
       // silent
