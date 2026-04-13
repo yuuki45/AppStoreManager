@@ -217,6 +217,12 @@ export default async function LandingPage() {
         <div className="mx-auto max-w-4xl flex items-center justify-between text-xs text-muted-foreground">
           <span>App Store Manager</span>
           <div className="flex items-center gap-4">
+            <Link href="/terms" className="hover:text-foreground transition-colors">
+              利用規約
+            </Link>
+            <Link href="/privacy" className="hover:text-foreground transition-colors">
+              プライバシー
+            </Link>
             <a
               href="https://buymeacoffee.com/yuuki.dev"
               target="_blank"
